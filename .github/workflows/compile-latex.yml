@@ -1,0 +1,33 @@
+name: Compile LaTeX Document
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex  # Replace with your main .tex file
+          compiler: pdflatex  # You can use pdflatex, xelatex, or lualatex
+
+      - name: Move PDF to public folder
+        run: |
+          mkdir -p public
+          mv main.pdf public/Resume_Sai_Manohar_Vemuri.pdf
+
+      - name: Commit and push PDF
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add public/Resume_Sai_Manohar_Vemuri.pdf
+          git commit -m "Update CV PDF"
+          git push
